@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Delete Account — Orderly</title>
+  <style>
+    :root{
+      --bg:#f4f6fb;
+      --card:#ffffff;
+      --accent:#0b5ed7;
+      --danger:#ff4d4d;
+      --muted:#6b7280;
+      --radius:12px;
+      --shadow: 0 10px 30px rgba(11,78,215,0.06);
+      --maxw:420px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background:linear-gradient(180deg,var(--bg),#ffffff);
+      color:#111827;
+      padding:20px;
+    }
+
+    .container{
+      width:100%;
+      max-width:var(--maxw);
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow:var(--shadow);
+      border:1px solid #eef2ff;
+    }
+
+    h2{
+      margin:0 0 8px 0;
+      color:var(--accent);
+      font-size:1.25rem;
+      letter-spacing:0.2px;
+    }
+
+    p.lead{
+      margin:0 0 16px 0;
+      color:var(--muted);
+      font-size:0.95rem;
+    }
+
+    label{
+      display:block;
+      font-weight:600;
+      margin:12px 0 6px 0;
+      font-size:0.9rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    textarea,
+    select {
+      width:100%;
+      padding:10px 12px;
+      border-radius:8px;
+      border:1px solid #dfe7ff;
+      font-size:0.95rem;
+      background:#fbfdff;
+    }
+
+    textarea{ min-height:90px; resize:vertical; }
+
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-top:12px;
+    }
+
+    .checkbox{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      margin:10px 0;
+      color:var(--muted);
+      font-size:0.95rem;
+    }
+
+    .btn {
+      background:var(--danger);
+      color:white;
+      border:none;
+      padding:10px 14px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:700;
+      letter-spacing:0.2px;
+      width:100%;
+      margin-top:14px;
+      box-shadow: 0 6px 18px rgba(255,77,77,0.12);
+    }
+
+    .btn.secondary{
+      background:transparent;
+      color:var(--accent);
+      border:1px solid #d7e6ff;
+      box-shadow:none;
+      font-weight:600;
+    }
+
+    .note{
+      font-size:0.9rem;
+      color:var(--muted);
+      margin-top:10px;
+    }
+
+    .contact{
+      margin-top:14px;
+      padding:12px;
+      border-radius:8px;
+      background:linear-gradient(180deg,#fbfdff,#ffffff);
+      border-left:4px solid var(--accent);
+      color:var(--muted);
+      font-size:0.94rem;
+    }
+
+    /* modal */
+    .modal-backdrop{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(3,6,23,0.45);
+      z-index:50;
+    }
+    .modal{
+      width:90%;
+      max-width:480px;
+      background:var(--card);
+      border-radius:12px;
+      padding:18px;
+      box-shadow:0 14px 40px rgba(2,6,23,0.35);
+      border:1px solid #e9f2ff;
+    }
+    .modal h3{ margin:0 0 8px 0; color:#111827 }
+    .modal p{ margin:0 0 16px 0; color:var(--muted) }
+    .modal .actions{ display:flex; gap:10px; justify-content:flex-end; }
+
+    /* success screen */
+    .success{
+      text-align:center;
+      padding:18px;
+      display:none;
+    }
+    .success h3{ color:var(--accent); margin-bottom:8px }
+    .success p{ color:var(--muted); margin-bottom:10px }
+
+    @media (max-width:460px){
+      .container{ padding:18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-labelledby="title">
+    <h2 id="title">Delete your Orderly account</h2>
+    <p class="lead">We're sorry to see you go. Complete the form below so we can verify your request and remove your account and data if you confirm.</p>
+
+    <form id="deleteForm" onsubmit="return openConfirm(event)" autocomplete="on" novalidate>
+      <label for="name">Full name</label>
+      <input id="name" type="text" placeholder="Enter your full name" required>
+
+      <label for="email">Email address</label>
+      <input id="email" type="email" placeholder="you@business.com" required>
+
+      <label for="password">Password (for verification)</label>
+      <input id="password" type="password" placeholder="Enter your password" required>
+
+      <label for="reason">Reason for leaving (optional)</label>
+      <textarea id="reason" placeholder="Quick note — helps us improve Orderly"></textarea>
+
+      <div class="checkbox" style="margin-top:6px">
+        <input id="confirmBox" type="checkbox" style="width:18px; height:18px" required>
+        <label for="confirmBox" style="margin:0; font-weight:600; color:#111827">I confirm I want to permanently delete my account and data.</label>
+      </div>
+
+      <div class="note">You will lose access to your orders, customers, and invoices. Some records may be retained if required by law (taxation, dispute resolution).</div>
+
+      <button class="btn" type="submit">Delete my account</button>
+      <button class="btn secondary" type="button" onclick="cancel()" style="margin-top:8px">Cancel</button>
+    </form>
+
+    <div class="contact" aria-label="contact information">
+      <div><strong>Need help?</strong> Email <a href="mailto:dhanush.o2004@gmail.com">support@orderly.app</a> or call <strong>+91 9843964434</strong></div>
+    </div>
+
+    <!-- Success view (hidden until delete confirmed) -->
+    <div id="successView" class="success" role="status" aria-live="polite">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" style="margin:auto;display:block">
+        <circle cx="12" cy="12" r="10" stroke="#dfefff" stroke-width="2" fill="#f6fbff"/>
+        <path d="M7 12.5l2.5 2.5L17 8" stroke="#0b5ed7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <h3>Account deletion request received</h3>
+      <p>We have received your request and will process deletion shortly. You will get a confirmation email at the address you provided.</p>
+      <div style="font-size:0.95rem; color:var(--muted)">If you changed your mind, contact support within 48 hours to attempt recovery (subject to our retention policies).</div>
+    </div>
+  </div>
+
+  <!-- Confirmation modal -->
+  <div id="modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal" role="document">
+      <h3>Confirm permanent deletion</h3>
+      <p>This action will permanently delete your Orderly account and all associated data (orders, customers, invoices) unless legal retention applies. This cannot be undone.</p>
+      <div class="actions">
+        <button class="btn secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn" onclick="performDelete()">Yes, delete my account</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Open confirmation modal after basic validation
+    function openConfirm(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const confirmChecked = document.getElementById('confirmBox').checked;
+
+      if(!name || !email || !password){
+        alert('Please fill name, email and password.');
+        return false;
+      }
+      if(!confirmChecked){
+        alert('Please confirm that you understand this will permanently delete your account.');
+        return false;
+      }
+
+      // Show modal
+      const modal = document.getElementById('modal');
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+      return false;
+    }
+
+    function closeModal(){
+      const modal = document.getElementById('modal');
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden','true');
+    }
+
+    function cancel(){
+      // Reset form fields and uncheck confirmation
+      document.getElementById('deleteForm').reset();
+      closeModal();
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    // Simulated deletion flow (replace with real API call)
+    function performDelete(){
+      // optionally show a loading state here
+      closeModal();
+
+      // Gather submitted values (for server API)
+      const payload = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        reason: document.getElementById('reason').value.trim()
+        // do NOT include raw password in any log; only send securely to backend.
+      };
+
+      // --- Replace the following with an actual fetch() to your server ---
+      // Example:
+      // fetch('/api/delete-account', { method: 'POST', headers: {...}, body: JSON.stringify(payload) })
+      //   .then(...)
+      // For this demo we'll just show a success screen.
+
+      document.getElementById('deleteForm').style.display = 'none';
+      const success = document.getElementById('successView');
+      success.style.display = 'block';
+
+      // Optionally, focus the success message for screen readers:
+      success.focus && success.focus();
+    }
+  </script>
+</body>
+</html>
